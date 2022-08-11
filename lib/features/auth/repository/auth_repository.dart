@@ -29,10 +29,11 @@ abstract class IAuthRepository {
 
 /// Simple implementation of [IAuthRepository], using [StudyJamClient].
 class AuthRepository implements IAuthRepository {
-  final StudyJamClient _studyJamClient;
-
   /// Constructor for [AuthRepository].
-  AuthRepository(this._studyJamClient);
+  AuthRepository({required final StudyJamClient studyJamClient})
+      : _studyJamClient = studyJamClient;
+
+  final StudyJamClient _studyJamClient;
 
   @override
   Future<TokenDto> signIn({

@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:surf_practice_chat_flutter/features/auth/bloc/auth_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/auth/models/token_dto.dart';
 import 'package:surf_practice_chat_flutter/features/auth/repository/auth_repository.dart';
 import 'package:surf_practice_chat_flutter/features/chat/repository/chat_repository.dart';
@@ -9,24 +13,99 @@ import 'package:surf_study_jam/surf_study_jam.dart';
 ///
 /// Contains [IAuthRepository] to do so.
 class AuthScreen extends StatefulWidget {
-  /// Repository for auth implementation.
-  final IAuthRepository authRepository;
-
   /// Constructor for [AuthScreen].
-  const AuthScreen({
-    required this.authRepository,
-    Key? key,
-  }) : super(key: key);
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  // TODO(task): Implement Auth screen.
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) => state.mapOrNull<void>(
+        error: (state) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red.shade300,
+            content: Text(
+              state.message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        authenticated: (state) => log('ok'),
+      ),
+      builder: (context, state) => Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Sign In',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+              ),
+              const SizedBox(height: 22),
+              _LoginTextField(
+                controller: _loginController,
+              ),
+              const SizedBox(height: 16),
+              _PasswordTextField(
+                controller: _passwordController,
+              ),
+              const SizedBox(height: 16),
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _loginController,
+                builder: (context, login, _) =>
+                    ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: _passwordController,
+                  builder: (context, password, _) {
+                    return MaterialButton(
+                      onPressed: (login.text.isEmpty || password.text.isEmpty
+                          // || state.inProgress
+                          )
+                          ? null
+                          : () => context.read<AuthBloc>().add(AuthEvent.signIn(
+                                login: login.text,
+                                password: password.text,
+                              )),
+                      color: Colors.orange,
+                      disabledColor: Colors.orange.shade300,
+                      textColor: Colors.white,
+                      disabledTextColor: Colors.grey.shade300,
+                      height: 50,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: const Text(
+                        'Войти',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _pushToChat(BuildContext context, TokenDto token) {
@@ -40,6 +119,117 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _LoginTextField extends StatefulWidget {
+  const _LoginTextField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+
+  @override
+  State<_LoginTextField> createState() => _LoginTextFieldState();
+}
+
+class _LoginTextFieldState extends State<_LoginTextField> {
+  @override
+  Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(
+        width: 2,
+        color: Colors.orange.shade200,
+      ),
+    );
+
+    return TextFormField(
+      controller: widget.controller,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        // counterText: ' ',
+        errorMaxLines: 2,
+        labelText: 'login',
+        labelStyle: TextStyle(color: Colors.orange.shade800),
+        border: border,
+        focusedBorder: border.copyWith(
+          borderSide: const BorderSide(
+            width: 2,
+            color: Colors.orange,
+          ),
+        ),
+        enabledBorder: border.copyWith(
+          borderSide: const BorderSide(
+            width: 2,
+            color: Colors.orange,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PasswordTextField extends StatefulWidget {
+  const _PasswordTextField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+
+  @override
+  State<_PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<_PasswordTextField> {
+  bool _isObscure = true;
+
+  void _changeVisibility() {
+    setState(() {
+      _isObscure = !_isObscure;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(
+        width: 2,
+        color: Colors.orange.shade200,
+      ),
+    );
+
+    return TextFormField(
+      controller: widget.controller,
+      obscureText: _isObscure,
+      decoration: InputDecoration(
+        labelText: 'password',
+        labelStyle: TextStyle(color: Colors.orange.shade800),
+        suffixIcon: GestureDetector(
+          onTap: _changeVisibility,
+          child: Icon(
+            _isObscure ? Icons.visibility_off : Icons.visibility,
+            color: Colors.black,
+          ),
+        ),
+        border: border,
+        focusedBorder: border.copyWith(
+          borderSide: const BorderSide(
+            width: 2,
+            color: Colors.orange,
+          ),
+        ),
+        enabledBorder: border.copyWith(
+          borderSide: const BorderSide(
+            width: 2,
+            color: Colors.orange,
+          ),
+        ),
       ),
     );
   }
