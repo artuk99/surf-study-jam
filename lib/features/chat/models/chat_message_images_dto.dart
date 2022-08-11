@@ -1,17 +1,16 @@
-import 'package:surf_practice_chat_flutter/features/chat/models/chat_geolocation_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_user_dto.dart';
 import 'package:surf_study_jam/surf_study_jam.dart';
 
-/// Data transfer object representing geolocation chat message.
-class ChatMessageGeolocationDto extends ChatMessageDto {
-  /// Location point.
-  final ChatGeolocationDto location;
+/// Data transfer object representing chat message with attached images.
+class ChatMessageImagesDto extends ChatMessageDto {
+  /// Attached images.
+  final List<String>? images;
 
-  /// Constructor for [ChatMessageGeolocationDto].
-  ChatMessageGeolocationDto({
+  /// Constructor for [ChatMessageImagesDto].
+  ChatMessageImagesDto({
     required ChatUserDto chatUserDto,
-    required this.location,
+    required this.images,
     required String message,
     required DateTime createdDate,
   }) : super(
@@ -21,10 +20,10 @@ class ChatMessageGeolocationDto extends ChatMessageDto {
         );
 
   /// Named constructor for converting DTO from [StudyJamClient].
-  ChatMessageGeolocationDto.fromSJClient({
+  ChatMessageImagesDto.fromSJClient({
     required SjMessageDto sjMessageDto,
     required SjUserDto sjUserDto,
-  })  : location = ChatGeolocationDto.fromGeoPoint(sjMessageDto.geopoint!),
+  })  : images = sjMessageDto.images,
         super(
           createdDateTime: sjMessageDto.created,
           message: sjMessageDto.text,
@@ -32,5 +31,5 @@ class ChatMessageGeolocationDto extends ChatMessageDto {
         );
 
   @override
-  String toString() => 'ChatMessageGeolocationDto(location: $location) extends ${super.toString()}';
+  String toString() => 'ChatMessageImagesDto(images: $images) extends ${super.toString()}';
 }

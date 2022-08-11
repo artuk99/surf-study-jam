@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:surf_practice_chat_flutter/features/auth/exceptions/auth_exception.dart';
 import 'package:surf_practice_chat_flutter/features/auth/models/token_dto.dart';
 import 'package:surf_practice_chat_flutter/features/auth/repository/auth_repository.dart';
+import 'package:surf_practice_chat_flutter/main.dart';
 
 part 'auth_bloc.freezed.dart';
 
@@ -60,9 +64,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         login: event.login,
         password: event.password,
       );
+      log(token.token);
+      studyJamClient = studyJamClient.getAuthorizedClient(token.token);
       emit(AuthState.authenticated(token: token));
-    } on Object catch (_) {
-      rethrow;
+    } on AuthException catch (e) {
+      emit(AuthState.error(message: e.message));
     }
   }
 
@@ -73,8 +79,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthState.inProgress());
     try {
       await _authRepository.signOut();
-    } on Object catch (_) {
-      rethrow;
+    } on AuthException catch (e) {
+      emit(AuthState.error(message: e.message));
     }
   }
 }

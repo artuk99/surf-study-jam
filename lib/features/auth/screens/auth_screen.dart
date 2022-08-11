@@ -42,23 +42,23 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
         ),
-        authenticated: (state) => log('ok'),
+        authenticated: (state) => _pushToChat(context, state.token),
       ),
       builder: (context, state) => Scaffold(
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
                 'Sign In',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                  fontSize: 24,
                 ),
               ),
-              const SizedBox(height: 22),
+              const SizedBox(height: 24),
               _LoginTextField(
                 controller: _loginController,
               ),
@@ -101,6 +101,11 @@ class _AuthScreenState extends State<AuthScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 10),
+              const LinearProgressIndicator(
+                color: Colors.orange,
+                backgroundColor: Colors.transparent,
+              ),
             ],
           ),
         ),
@@ -114,9 +119,9 @@ class _AuthScreenState extends State<AuthScreen> {
       MaterialPageRoute(
         builder: (_) {
           return ChatScreen(
-            chatRepository: ChatRepository(
-              StudyJamClient().getAuthorizedClient(token.token),
-            ),
+            // chatRepository: ChatRepository(
+            //   StudyJamClient().getAuthorizedClient(token.token),
+            // ),
           );
         },
       ),
