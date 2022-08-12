@@ -25,10 +25,11 @@ abstract class IChatTopicsRepository {
 
 /// Simple implementation of [IChatTopicsRepository], using [StudyJamClient].
 class ChatTopicsRepository implements IChatTopicsRepository {
-  final StudyJamClient _studyJamClient;
-
   /// Constructor for [ChatTopicsRepository].
-  ChatTopicsRepository(this._studyJamClient);
+  ChatTopicsRepository({required final StudyJamClient studyJamClient})
+      : _studyJamClient = studyJamClient;
+
+  final StudyJamClient _studyJamClient;
 
   @override
   Future<Iterable<ChatTopicDto>> getTopics({

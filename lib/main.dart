@@ -7,6 +7,8 @@ import 'package:surf_practice_chat_flutter/features/auth/services/token_storage.
 import 'package:surf_practice_chat_flutter/features/chat/bloc/chat_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/chat/bloc/message_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/chat/repository/chat_repository.dart';
+import 'package:surf_practice_chat_flutter/features/topics/bloc/topic_bloc.dart';
+import 'package:surf_practice_chat_flutter/features/topics/repository/chart_topics_repository.dart';
 import 'package:surf_study_jam/surf_study_jam.dart';
 
 void main() async {
@@ -31,6 +33,10 @@ class MyApp extends StatelessWidget {
             authRepository: AuthRepository(studyJamClient: studyJamClient),
             tokenStorage: TokenStorage(),
           ),
+        ),
+        BlocProvider<TopicBloc>(
+          create: (_) => TopicBloc(
+              topicRepository: ChatTopicsRepository(studyJamClient: studyJamClient)),
         ),
         BlocProvider<ChatBloc>(
           create: (_) => ChatBloc(

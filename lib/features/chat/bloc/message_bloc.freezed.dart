@@ -17,19 +17,20 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$MessageEvent {
   String? get message => throw _privateConstructorUsedError;
+  int? get chatId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? message) sendMessage,
+    required TResult Function(String? message, int? chatId) sendMessage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String? message)? sendMessage,
+    TResult Function(String? message, int? chatId)? sendMessage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? message)? sendMessage,
+    TResult Function(String? message, int? chatId)? sendMessage,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -60,7 +61,7 @@ abstract class $MessageEventCopyWith<$Res> {
   factory $MessageEventCopyWith(
           MessageEvent value, $Res Function(MessageEvent) then) =
       _$MessageEventCopyWithImpl<$Res>;
-  $Res call({String? message});
+  $Res call({String? message, int? chatId});
 }
 
 /// @nodoc
@@ -74,12 +75,17 @@ class _$MessageEventCopyWithImpl<$Res> implements $MessageEventCopyWith<$Res> {
   @override
   $Res call({
     Object? message = freezed,
+    Object? chatId = freezed,
   }) {
     return _then(_value.copyWith(
       message: message == freezed
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String?,
+      chatId: chatId == freezed
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -91,7 +97,7 @@ abstract class _$$_SendMessageEventCopyWith<$Res>
           _$_SendMessageEvent value, $Res Function(_$_SendMessageEvent) then) =
       __$$_SendMessageEventCopyWithImpl<$Res>;
   @override
-  $Res call({String? message});
+  $Res call({String? message, int? chatId});
 }
 
 /// @nodoc
@@ -108,12 +114,17 @@ class __$$_SendMessageEventCopyWithImpl<$Res>
   @override
   $Res call({
     Object? message = freezed,
+    Object? chatId = freezed,
   }) {
     return _then(_$_SendMessageEvent(
       message: message == freezed
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String?,
+      chatId: chatId == freezed
+          ? _value.chatId
+          : chatId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -121,14 +132,17 @@ class __$$_SendMessageEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_SendMessageEvent extends _SendMessageEvent {
-  const _$_SendMessageEvent({required this.message}) : super._();
+  const _$_SendMessageEvent({required this.message, required this.chatId})
+      : super._();
 
   @override
   final String? message;
+  @override
+  final int? chatId;
 
   @override
   String toString() {
-    return 'MessageEvent.sendMessage(message: $message)';
+    return 'MessageEvent.sendMessage(message: $message, chatId: $chatId)';
   }
 
   @override
@@ -136,12 +150,15 @@ class _$_SendMessageEvent extends _SendMessageEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SendMessageEvent &&
-            const DeepCollectionEquality().equals(other.message, message));
+            const DeepCollectionEquality().equals(other.message, message) &&
+            const DeepCollectionEquality().equals(other.chatId, chatId));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(message));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(message),
+      const DeepCollectionEquality().hash(chatId));
 
   @JsonKey(ignore: true)
   @override
@@ -151,27 +168,27 @@ class _$_SendMessageEvent extends _SendMessageEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? message) sendMessage,
+    required TResult Function(String? message, int? chatId) sendMessage,
   }) {
-    return sendMessage(message);
+    return sendMessage(message, chatId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String? message)? sendMessage,
+    TResult Function(String? message, int? chatId)? sendMessage,
   }) {
-    return sendMessage?.call(message);
+    return sendMessage?.call(message, chatId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? message)? sendMessage,
+    TResult Function(String? message, int? chatId)? sendMessage,
     required TResult orElse(),
   }) {
     if (sendMessage != null) {
-      return sendMessage(message);
+      return sendMessage(message, chatId);
     }
     return orElse();
   }
@@ -206,12 +223,15 @@ class _$_SendMessageEvent extends _SendMessageEvent {
 }
 
 abstract class _SendMessageEvent extends MessageEvent {
-  const factory _SendMessageEvent({required final String? message}) =
-      _$_SendMessageEvent;
+  const factory _SendMessageEvent(
+      {required final String? message,
+      required final int? chatId}) = _$_SendMessageEvent;
   const _SendMessageEvent._() : super._();
 
   @override
   String? get message;
+  @override
+  int? get chatId;
   @override
   @JsonKey(ignore: true)
   _$$_SendMessageEventCopyWith<_$_SendMessageEvent> get copyWith =>

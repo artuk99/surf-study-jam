@@ -72,13 +72,9 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ],
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: _ChatAppBar(
-            controller: _nameEditingController,
-            onUpdatePressed: () =>
-                context.read<ChatBloc>().add(const ChatEvent.getMessages()),
-          ),
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(48),
+          child: _ChatAppBar(),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -166,6 +162,8 @@ class _ChatTextField extends StatelessWidget {
                         : () {
                             context.read<MessageBloc>().add(
                                 MessageEvent.sendMessage(
+                                    chatId:
+                                        context.read<ChatBloc>().state.chtId,
                                     message: _textEditingController.text));
                             _textEditingController.clear();
                           },
@@ -187,29 +185,20 @@ class _ChatTextField extends StatelessWidget {
 }
 
 class _ChatAppBar extends StatelessWidget {
-  final VoidCallback onUpdatePressed;
-  final TextEditingController controller;
-
-  const _ChatAppBar({
-    required this.onUpdatePressed,
-    required this.controller,
-    Key? key,
-  }) : super(key: key);
+  const _ChatAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.orange,
       leading: IconButton(
-        onPressed: () {
-          context.read<AuthBloc>().add(const AuthEvent.signOut());
-          Navigator.of(context).pop();
-        },
-        icon: const Icon(Icons.logout),
+        onPressed: () => Navigator.of(context).pop(),
+        icon: const Icon(Icons.arrow_back),
       ),
       actions: [
         IconButton(
-          onPressed: onUpdatePressed,
+          onPressed: () =>
+              context.read<ChatBloc>().add(const ChatEvent.getMessages()),
           icon: const Icon(Icons.refresh),
         ),
       ],

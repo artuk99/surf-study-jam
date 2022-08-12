@@ -18,32 +18,38 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ChatEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function(int hcatId) initChat,
     required TResult Function() getMessages,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(int hcatId)? initChat,
     TResult Function()? getMessages,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int hcatId)? initChat,
     TResult Function()? getMessages,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitChatEvent value) initChat,
     required TResult Function(_GetMessagesEvent value) getMessages,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_InitChatEvent value)? initChat,
     TResult Function(_GetMessagesEvent value)? getMessages,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitChatEvent value)? initChat,
     TResult Function(_GetMessagesEvent value)? getMessages,
     required TResult orElse(),
   }) =>
@@ -63,6 +69,140 @@ class _$ChatEventCopyWithImpl<$Res> implements $ChatEventCopyWith<$Res> {
   final ChatEvent _value;
   // ignore: unused_field
   final $Res Function(ChatEvent) _then;
+}
+
+/// @nodoc
+abstract class _$$_InitChatEventCopyWith<$Res> {
+  factory _$$_InitChatEventCopyWith(
+          _$_InitChatEvent value, $Res Function(_$_InitChatEvent) then) =
+      __$$_InitChatEventCopyWithImpl<$Res>;
+  $Res call({int hcatId});
+}
+
+/// @nodoc
+class __$$_InitChatEventCopyWithImpl<$Res> extends _$ChatEventCopyWithImpl<$Res>
+    implements _$$_InitChatEventCopyWith<$Res> {
+  __$$_InitChatEventCopyWithImpl(
+      _$_InitChatEvent _value, $Res Function(_$_InitChatEvent) _then)
+      : super(_value, (v) => _then(v as _$_InitChatEvent));
+
+  @override
+  _$_InitChatEvent get _value => super._value as _$_InitChatEvent;
+
+  @override
+  $Res call({
+    Object? hcatId = freezed,
+  }) {
+    return _then(_$_InitChatEvent(
+      hcatId: hcatId == freezed
+          ? _value.hcatId
+          : hcatId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_InitChatEvent extends _InitChatEvent {
+  const _$_InitChatEvent({required this.hcatId}) : super._();
+
+  @override
+  final int hcatId;
+
+  @override
+  String toString() {
+    return 'ChatEvent.initChat(hcatId: $hcatId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_InitChatEvent &&
+            const DeepCollectionEquality().equals(other.hcatId, hcatId));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(hcatId));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_InitChatEventCopyWith<_$_InitChatEvent> get copyWith =>
+      __$$_InitChatEventCopyWithImpl<_$_InitChatEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int hcatId) initChat,
+    required TResult Function() getMessages,
+  }) {
+    return initChat(hcatId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(int hcatId)? initChat,
+    TResult Function()? getMessages,
+  }) {
+    return initChat?.call(hcatId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int hcatId)? initChat,
+    TResult Function()? getMessages,
+    required TResult orElse(),
+  }) {
+    if (initChat != null) {
+      return initChat(hcatId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_InitChatEvent value) initChat,
+    required TResult Function(_GetMessagesEvent value) getMessages,
+  }) {
+    return initChat(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_InitChatEvent value)? initChat,
+    TResult Function(_GetMessagesEvent value)? getMessages,
+  }) {
+    return initChat?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitChatEvent value)? initChat,
+    TResult Function(_GetMessagesEvent value)? getMessages,
+    required TResult orElse(),
+  }) {
+    if (initChat != null) {
+      return initChat(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _InitChatEvent extends ChatEvent {
+  const factory _InitChatEvent({required final int hcatId}) = _$_InitChatEvent;
+  const _InitChatEvent._() : super._();
+
+  int get hcatId;
+  @JsonKey(ignore: true)
+  _$$_InitChatEventCopyWith<_$_InitChatEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -106,6 +246,7 @@ class _$_GetMessagesEvent extends _GetMessagesEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function(int hcatId) initChat,
     required TResult Function() getMessages,
   }) {
     return getMessages();
@@ -114,6 +255,7 @@ class _$_GetMessagesEvent extends _GetMessagesEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(int hcatId)? initChat,
     TResult Function()? getMessages,
   }) {
     return getMessages?.call();
@@ -122,6 +264,7 @@ class _$_GetMessagesEvent extends _GetMessagesEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int hcatId)? initChat,
     TResult Function()? getMessages,
     required TResult orElse(),
   }) {
@@ -134,6 +277,7 @@ class _$_GetMessagesEvent extends _GetMessagesEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_InitChatEvent value) initChat,
     required TResult Function(_GetMessagesEvent value) getMessages,
   }) {
     return getMessages(this);
@@ -142,6 +286,7 @@ class _$_GetMessagesEvent extends _GetMessagesEvent {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_InitChatEvent value)? initChat,
     TResult Function(_GetMessagesEvent value)? getMessages,
   }) {
     return getMessages?.call(this);
@@ -150,6 +295,7 @@ class _$_GetMessagesEvent extends _GetMessagesEvent {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_InitChatEvent value)? initChat,
     TResult Function(_GetMessagesEvent value)? getMessages,
     required TResult orElse(),
   }) {
@@ -167,27 +313,32 @@ abstract class _GetMessagesEvent extends ChatEvent {
 
 /// @nodoc
 mixin _$ChatState {
+  int? get chtId => throw _privateConstructorUsedError;
   List<ChatMessageDto> get messages => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ChatMessageDto> messages) fetching,
-    required TResult Function(List<ChatMessageDto> messages) idle,
-    required TResult Function(List<ChatMessageDto> messages, String message)
+    required TResult Function(int? chtId, List<ChatMessageDto> messages)
+        fetching,
+    required TResult Function(int? chtId, List<ChatMessageDto> messages) idle,
+    required TResult Function(
+            int? chtId, List<ChatMessageDto> messages, String message)
         error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -223,7 +374,7 @@ mixin _$ChatState {
 abstract class $ChatStateCopyWith<$Res> {
   factory $ChatStateCopyWith(ChatState value, $Res Function(ChatState) then) =
       _$ChatStateCopyWithImpl<$Res>;
-  $Res call({List<ChatMessageDto> messages});
+  $Res call({int? chtId, List<ChatMessageDto> messages});
 }
 
 /// @nodoc
@@ -236,9 +387,14 @@ class _$ChatStateCopyWithImpl<$Res> implements $ChatStateCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? chtId = freezed,
     Object? messages = freezed,
   }) {
     return _then(_value.copyWith(
+      chtId: chtId == freezed
+          ? _value.chtId
+          : chtId // ignore: cast_nullable_to_non_nullable
+              as int?,
       messages: messages == freezed
           ? _value.messages
           : messages // ignore: cast_nullable_to_non_nullable
@@ -254,7 +410,7 @@ abstract class _$$_FetchingStateCopyWith<$Res>
           _$_FetchingState value, $Res Function(_$_FetchingState) then) =
       __$$_FetchingStateCopyWithImpl<$Res>;
   @override
-  $Res call({List<ChatMessageDto> messages});
+  $Res call({int? chtId, List<ChatMessageDto> messages});
 }
 
 /// @nodoc
@@ -269,9 +425,14 @@ class __$$_FetchingStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? chtId = freezed,
     Object? messages = freezed,
   }) {
     return _then(_$_FetchingState(
+      chtId: chtId == freezed
+          ? _value.chtId
+          : chtId // ignore: cast_nullable_to_non_nullable
+              as int?,
       messages: messages == freezed
           ? _value._messages
           : messages // ignore: cast_nullable_to_non_nullable
@@ -283,10 +444,13 @@ class __$$_FetchingStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_FetchingState extends _FetchingState {
-  const _$_FetchingState({required final List<ChatMessageDto> messages})
+  const _$_FetchingState(
+      {required this.chtId, required final List<ChatMessageDto> messages})
       : _messages = messages,
         super._();
 
+  @override
+  final int? chtId;
   final List<ChatMessageDto> _messages;
   @override
   List<ChatMessageDto> get messages {
@@ -296,7 +460,7 @@ class _$_FetchingState extends _FetchingState {
 
   @override
   String toString() {
-    return 'ChatState.fetching(messages: $messages)';
+    return 'ChatState.fetching(chtId: $chtId, messages: $messages)';
   }
 
   @override
@@ -304,12 +468,15 @@ class _$_FetchingState extends _FetchingState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FetchingState &&
+            const DeepCollectionEquality().equals(other.chtId, chtId) &&
             const DeepCollectionEquality().equals(other._messages, _messages));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_messages));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(chtId),
+      const DeepCollectionEquality().hash(_messages));
 
   @JsonKey(ignore: true)
   @override
@@ -319,34 +486,38 @@ class _$_FetchingState extends _FetchingState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ChatMessageDto> messages) fetching,
-    required TResult Function(List<ChatMessageDto> messages) idle,
-    required TResult Function(List<ChatMessageDto> messages, String message)
+    required TResult Function(int? chtId, List<ChatMessageDto> messages)
+        fetching,
+    required TResult Function(int? chtId, List<ChatMessageDto> messages) idle,
+    required TResult Function(
+            int? chtId, List<ChatMessageDto> messages, String message)
         error,
   }) {
-    return fetching(messages);
+    return fetching(chtId, messages);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
   }) {
-    return fetching?.call(messages);
+    return fetching?.call(chtId, messages);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
     required TResult orElse(),
   }) {
     if (fetching != null) {
-      return fetching(messages);
+      return fetching(chtId, messages);
     }
     return orElse();
   }
@@ -387,10 +558,13 @@ class _$_FetchingState extends _FetchingState {
 }
 
 abstract class _FetchingState extends ChatState {
-  const factory _FetchingState({required final List<ChatMessageDto> messages}) =
-      _$_FetchingState;
+  const factory _FetchingState(
+      {required final int? chtId,
+      required final List<ChatMessageDto> messages}) = _$_FetchingState;
   const _FetchingState._() : super._();
 
+  @override
+  int? get chtId;
   @override
   List<ChatMessageDto> get messages;
   @override
@@ -405,7 +579,7 @@ abstract class _$$_IdleStateCopyWith<$Res> implements $ChatStateCopyWith<$Res> {
           _$_IdleState value, $Res Function(_$_IdleState) then) =
       __$$_IdleStateCopyWithImpl<$Res>;
   @override
-  $Res call({List<ChatMessageDto> messages});
+  $Res call({int? chtId, List<ChatMessageDto> messages});
 }
 
 /// @nodoc
@@ -420,9 +594,14 @@ class __$$_IdleStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? chtId = freezed,
     Object? messages = freezed,
   }) {
     return _then(_$_IdleState(
+      chtId: chtId == freezed
+          ? _value.chtId
+          : chtId // ignore: cast_nullable_to_non_nullable
+              as int?,
       messages: messages == freezed
           ? _value._messages
           : messages // ignore: cast_nullable_to_non_nullable
@@ -434,10 +613,13 @@ class __$$_IdleStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_IdleState extends _IdleState {
-  const _$_IdleState({required final List<ChatMessageDto> messages})
+  const _$_IdleState(
+      {required this.chtId, required final List<ChatMessageDto> messages})
       : _messages = messages,
         super._();
 
+  @override
+  final int? chtId;
   final List<ChatMessageDto> _messages;
   @override
   List<ChatMessageDto> get messages {
@@ -447,7 +629,7 @@ class _$_IdleState extends _IdleState {
 
   @override
   String toString() {
-    return 'ChatState.idle(messages: $messages)';
+    return 'ChatState.idle(chtId: $chtId, messages: $messages)';
   }
 
   @override
@@ -455,12 +637,15 @@ class _$_IdleState extends _IdleState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_IdleState &&
+            const DeepCollectionEquality().equals(other.chtId, chtId) &&
             const DeepCollectionEquality().equals(other._messages, _messages));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_messages));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(chtId),
+      const DeepCollectionEquality().hash(_messages));
 
   @JsonKey(ignore: true)
   @override
@@ -470,34 +655,38 @@ class _$_IdleState extends _IdleState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ChatMessageDto> messages) fetching,
-    required TResult Function(List<ChatMessageDto> messages) idle,
-    required TResult Function(List<ChatMessageDto> messages, String message)
+    required TResult Function(int? chtId, List<ChatMessageDto> messages)
+        fetching,
+    required TResult Function(int? chtId, List<ChatMessageDto> messages) idle,
+    required TResult Function(
+            int? chtId, List<ChatMessageDto> messages, String message)
         error,
   }) {
-    return idle(messages);
+    return idle(chtId, messages);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
   }) {
-    return idle?.call(messages);
+    return idle?.call(chtId, messages);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
     required TResult orElse(),
   }) {
     if (idle != null) {
-      return idle(messages);
+      return idle(chtId, messages);
     }
     return orElse();
   }
@@ -538,10 +727,13 @@ class _$_IdleState extends _IdleState {
 }
 
 abstract class _IdleState extends ChatState {
-  const factory _IdleState({required final List<ChatMessageDto> messages}) =
-      _$_IdleState;
+  const factory _IdleState(
+      {required final int? chtId,
+      required final List<ChatMessageDto> messages}) = _$_IdleState;
   const _IdleState._() : super._();
 
+  @override
+  int? get chtId;
   @override
   List<ChatMessageDto> get messages;
   @override
@@ -557,7 +749,7 @@ abstract class _$$_ErrorStateCopyWith<$Res>
           _$_ErrorState value, $Res Function(_$_ErrorState) then) =
       __$$_ErrorStateCopyWithImpl<$Res>;
   @override
-  $Res call({List<ChatMessageDto> messages, String message});
+  $Res call({int? chtId, List<ChatMessageDto> messages, String message});
 }
 
 /// @nodoc
@@ -572,10 +764,15 @@ class __$$_ErrorStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? chtId = freezed,
     Object? messages = freezed,
     Object? message = freezed,
   }) {
     return _then(_$_ErrorState(
+      chtId: chtId == freezed
+          ? _value.chtId
+          : chtId // ignore: cast_nullable_to_non_nullable
+              as int?,
       messages: messages == freezed
           ? _value._messages
           : messages // ignore: cast_nullable_to_non_nullable
@@ -592,11 +789,14 @@ class __$$_ErrorStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
 
 class _$_ErrorState extends _ErrorState {
   const _$_ErrorState(
-      {required final List<ChatMessageDto> messages,
+      {required this.chtId,
+      required final List<ChatMessageDto> messages,
       this.message = 'Failed to update chat'})
       : _messages = messages,
         super._();
 
+  @override
+  final int? chtId;
   final List<ChatMessageDto> _messages;
   @override
   List<ChatMessageDto> get messages {
@@ -610,7 +810,7 @@ class _$_ErrorState extends _ErrorState {
 
   @override
   String toString() {
-    return 'ChatState.error(messages: $messages, message: $message)';
+    return 'ChatState.error(chtId: $chtId, messages: $messages, message: $message)';
   }
 
   @override
@@ -618,6 +818,7 @@ class _$_ErrorState extends _ErrorState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ErrorState &&
+            const DeepCollectionEquality().equals(other.chtId, chtId) &&
             const DeepCollectionEquality().equals(other._messages, _messages) &&
             const DeepCollectionEquality().equals(other.message, message));
   }
@@ -625,6 +826,7 @@ class _$_ErrorState extends _ErrorState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(chtId),
       const DeepCollectionEquality().hash(_messages),
       const DeepCollectionEquality().hash(message));
 
@@ -636,34 +838,38 @@ class _$_ErrorState extends _ErrorState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ChatMessageDto> messages) fetching,
-    required TResult Function(List<ChatMessageDto> messages) idle,
-    required TResult Function(List<ChatMessageDto> messages, String message)
+    required TResult Function(int? chtId, List<ChatMessageDto> messages)
+        fetching,
+    required TResult Function(int? chtId, List<ChatMessageDto> messages) idle,
+    required TResult Function(
+            int? chtId, List<ChatMessageDto> messages, String message)
         error,
   }) {
-    return error(messages, message);
+    return error(chtId, messages, message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
   }) {
-    return error?.call(messages, message);
+    return error?.call(chtId, messages, message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ChatMessageDto> messages)? fetching,
-    TResult Function(List<ChatMessageDto> messages)? idle,
-    TResult Function(List<ChatMessageDto> messages, String message)? error,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? fetching,
+    TResult Function(int? chtId, List<ChatMessageDto> messages)? idle,
+    TResult Function(int? chtId, List<ChatMessageDto> messages, String message)?
+        error,
     required TResult orElse(),
   }) {
     if (error != null) {
-      return error(messages, message);
+      return error(chtId, messages, message);
     }
     return orElse();
   }
@@ -705,10 +911,13 @@ class _$_ErrorState extends _ErrorState {
 
 abstract class _ErrorState extends ChatState {
   const factory _ErrorState(
-      {required final List<ChatMessageDto> messages,
+      {required final int? chtId,
+      required final List<ChatMessageDto> messages,
       final String message}) = _$_ErrorState;
   const _ErrorState._() : super._();
 
+  @override
+  int? get chtId;
   @override
   List<ChatMessageDto> get messages;
   String get message;

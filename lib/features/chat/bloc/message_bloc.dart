@@ -8,8 +8,10 @@ part 'message_bloc.freezed.dart';
 class MessageEvent with _$MessageEvent {
   const MessageEvent._();
 
-  const factory MessageEvent.sendMessage({required final String? message}) =
-      _SendMessageEvent;
+  const factory MessageEvent.sendMessage({
+    required final String? message,
+    required final int? chatId,
+  }) = _SendMessageEvent;
 }
 
 @freezed
@@ -48,10 +50,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     _SendMessageEvent event,
     Emitter<MessageState> emit,
   ) async {
-    if(event.message == null) return;
+    if (event.message == null) return;
     emit(MessageState.inProgress(message: state.message));
     try {
-      await _chatRepository.sendMessage(event.message!);
+      await _chatRepository.sendMessage(
+        message: event.message!,
+        chatId: event.chatId,
+      );
       emit(const MessageState.success(message: ''));
     } catch (e) {
       emit(MessageState.error(message: state.message));

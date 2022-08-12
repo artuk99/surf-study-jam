@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/auth/bloc/auth_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/chat/screens/chat_screen.dart';
+import 'package:surf_practice_chat_flutter/features/topics/screens/topic_screen.dart';
 
 /// Screen for authorization process.
 ///
@@ -50,7 +51,7 @@ class _AuthScreenState extends State<AuthScreen> {
           context,
           MaterialPageRoute(
             builder: (_) {
-              return const ChatScreen();
+              return const TopicsScreen();
             },
           ),
         ),
