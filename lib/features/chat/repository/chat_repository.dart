@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:surf_practice_chat_flutter/features/chat/exceptions/invalid_message_exception.dart';
 import 'package:surf_practice_chat_flutter/features/chat/exceptions/user_not_found_exception.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_geolocation_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_images_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_location_dto.dart';
+import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_location_images_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_user_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_user_local_dto.dart';
 import 'package:surf_study_jam/surf_study_jam.dart';
@@ -147,9 +146,13 @@ class ChatRepository implements IChatRepository {
         .getUsers(messagesWithUsers.values.toSet().toList());
     final localUser = await _studyJamClient.getUser();
 
-    return messages.reversed.map((sjMessageDto) {
-      if(sjMessageDto.text?.contains('А это комплексное сообщеие') ?? false){
-        log(sjMessageDto.toString());
+    return messages.map((sjMessageDto) {
+      if (sjMessageDto.geopoint != null && sjMessageDto.images != null){
+        return ChatMessageGeolocationAndImagesDto.fromSJClient(
+          sjMessageDto: sjMessageDto,
+          sjUserDto:
+              users.firstWhere((userDto) => userDto.id == sjMessageDto.userId),
+        );
       }
       if (sjMessageDto.geopoint != null) {
         return ChatMessageGeolocationDto.fromSJClient(

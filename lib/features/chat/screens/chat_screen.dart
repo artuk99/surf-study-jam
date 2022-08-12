@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:surf_practice_chat_flutter/features/auth/bloc/auth_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/chat/bloc/chat_bloc.dart';
+import 'package:surf_practice_chat_flutter/features/chat/bloc/message_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_images_dto.dart';
+import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_location_dto.dart';
+import 'package:surf_practice_chat_flutter/features/chat/models/chat_message_location_images_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_user_dto.dart';
 import 'package:surf_practice_chat_flutter/features/chat/models/chat_user_local_dto.dart';
 
@@ -21,9 +25,53 @@ class _ChatScreenState extends State<ChatScreen> {
   final _nameEditingController = TextEditingController();
 
   @override
+  void initState() {
+    context.read<ChatBloc>().add(const ChatEvent.getMessages());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatBloc, ChatState>(
-      builder: (context, state) => Scaffold(
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ChatBloc, ChatState>(
+          listener: (context, state) => state.mapOrNull<void>(
+            error: (state) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red.shade300,
+                content: Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        BlocListener<MessageBloc, MessageState>(
+          listener: (context, state) => state.mapOrNull(
+            error: (state) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red.shade300,
+                content: Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+      child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: _ChatAppBar(
@@ -35,32 +83,26 @@ class _ChatScreenState extends State<ChatScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: _ChatBody(
-                messages: state.messages,
+            BlocBuilder<ChatBloc, ChatState>(
+              builder: (context, state) => Expanded(
+                child: state.map(
+                  fetching: (_) => const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.orange,
+                    ),
+                  ),
+                  idle: (state) => _ChatBody(messages: state.messages.reversed),
+                  error: (state) =>
+                      _ChatBody(messages: state.messages.reversed),
+                ),
               ),
             ),
-            _ChatTextField(onSendPressed: (s) {}),
-            // _onSendPressed),
+            _ChatTextField(),
           ],
         ),
       ),
     );
   }
-
-  // Future<void> _onUpdatePressed() async {
-  //   final messages = await widget.chatRepository.getMessages();
-  //   setState(() {
-  //     _currentMessages = messages;
-  //   });
-  // }
-
-  // Future<void> _onSendPressed(String messageText) async {
-  //   final messages = await widget.chatRepository.sendMessage(messageText);
-  //   setState(() {
-  //     _currentMessages = messages;
-  //   });
-  // }
 }
 
 class _ChatBody extends StatelessWidget {
@@ -83,22 +125,16 @@ class _ChatBody extends StatelessWidget {
 }
 
 class _ChatTextField extends StatelessWidget {
-  final ValueChanged<String> onSendPressed;
+  _ChatTextField({Key? key}) : super(key: key);
 
   final _textEditingController = TextEditingController();
-
-  _ChatTextField({
-    required this.onSendPressed,
-    Key? key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Material(
-      color: colorScheme.surface,
+      color: Colors.white,
       elevation: 12,
       child: Padding(
         padding: EdgeInsets.only(
@@ -115,10 +151,33 @@ class _ChatTextField extends StatelessWidget {
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () => onSendPressed(_textEditingController.text),
-              icon: const Icon(Icons.send),
-              color: colorScheme.onSurface,
+            BlocBuilder<MessageBloc, MessageState>(
+              builder: (context, state) {
+                final bool isEnable = state.maybeMap(
+                  inProgress: (_) => false,
+                  orElse: () => true,
+                );
+
+                return ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: _textEditingController,
+                  builder: (context, email, _) => IconButton(
+                    onPressed: _textEditingController.text.isEmpty || !isEnable
+                        ? null
+                        : () {
+                            context.read<MessageBloc>().add(
+                                MessageEvent.sendMessage(
+                                    message: _textEditingController.text));
+                            _textEditingController.clear();
+                          },
+                    icon: Icon(
+                      state.maybeMap(
+                          inProgress: (state) => Icons.send_and_archive_rounded,
+                          orElse: () => Icons.send),
+                    ),
+                    color: Colors.orange,
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -142,8 +201,10 @@ class _ChatAppBar extends StatelessWidget {
     return AppBar(
       backgroundColor: Colors.orange,
       leading: IconButton(
-        onPressed: () =>
-            context.read<AuthBloc>().add(const AuthEvent.signOut()),
+        onPressed: () {
+          context.read<AuthBloc>().add(const AuthEvent.signOut());
+          Navigator.of(context).pop();
+        },
         icon: const Icon(Icons.logout),
       ),
       actions: [
@@ -167,6 +228,16 @@ class _ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    const localUserMessageBorder = BorderRadius.only(
+      topLeft: Radius.circular(8),
+      topRight: Radius.circular(8),
+      bottomLeft: Radius.circular(8),
+    );
+    final otherUserMessageBorder = localUserMessageBorder.copyWith(
+      bottomLeft: const Radius.circular(0),
+      bottomRight: const Radius.circular(8),
+    );
+
     return Material(
       color: chatData.chatUserDto is ChatUserLocalDto
           ? colorScheme.primary.withOpacity(.1)
@@ -179,41 +250,68 @@ class _ChatMessage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            _ChatAvatar(userData: chatData.chatUserDto),
-            const SizedBox(width: 16),
+            if (chatData.chatUserDto is! ChatUserLocalDto) ...[
+              _ChatAvatar(userData: chatData.chatUserDto),
+              const SizedBox(width: 16),
+            ],
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.orange.shade200,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                  ),
+                  borderRadius: (chatData.chatUserDto is! ChatUserLocalDto)
+                      ? otherUserMessageBorder
+                      : localUserMessageBorder,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      chatData.chatUserDto.name ?? '',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4),
+                    if (chatData.chatUserDto.name != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          chatData.chatUserDto.name ?? '',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     if (chatData is ChatMessageImagesDto)
                       _AttachedImages(
                           images: (chatData as ChatMessageImagesDto).images),
-                    // ListView.builder(
-                    //   itemCount: (chatData as ChatMessageImagesDto).images.l,
-                    //   itemBuilder: (),
-                    //   children: [
-                    //     (chatData as ChatMessageImagesDto)
-                    //         .images
-                    //         .map((e) => Image.network(e))
-                    //         .toList()
-                    //   ],
-                    // ),
+                    if (chatData is ChatMessageGeolocationDto)
+                      _Geolocation(
+                        latitude: (chatData as ChatMessageGeolocationDto)
+                            .location
+                            .latitude,
+                        longitude: (chatData as ChatMessageGeolocationDto)
+                            .location
+                            .longitude,
+                      ),
+                    if (chatData is ChatMessageGeolocationAndImagesDto) ...[
+                      _AttachedImages(
+                          images:
+                              (chatData as ChatMessageGeolocationAndImagesDto)
+                                  .images),
+                      const SizedBox(height: 8),
+                      _Geolocation(
+                        latitude:
+                            (chatData as ChatMessageGeolocationAndImagesDto)
+                                .location
+                                .latitude,
+                        longitude:
+                            (chatData as ChatMessageGeolocationAndImagesDto)
+                                .location
+                                .longitude,
+                      ),
+                    ],
                     Text(chatData.message ?? ''),
+                    const SizedBox(height: 8),
+                    Text(
+                      chatData.createdDateTime.toLocal().toString(),
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -248,7 +346,12 @@ class _ChatAvatar extends StatelessWidget {
         child: Center(
           child: Text(
             userData.name != null
-                ? '${userData.name!.split(' ').first[0]}${userData.name!.split(' ').last[0]}'
+                ? userData.name!
+                    .trim()
+                    .split(RegExp(' +'))
+                    .map((s) => s[0])
+                    .take(2)
+                    .join()
                 : '',
             style: TextStyle(
               color: colorScheme.onPrimary,
@@ -285,17 +388,49 @@ class _AttachedImages extends StatelessWidget {
               ))
         ],
       );
-      // Image.network(
-      //   images!.first,
-      //   errorBuilder: (context, exception, stackTrace) => const Text('error'),
-      // );
-      return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: images!.length,
-        itemBuilder: (_, i) => Image.network(images![i]),
-      );
     } else {
-      return const Text('Error');
+      return const SizedBox(
+        height: 50,
+        width: 50,
+        child: Text('Error'),
+      );
     }
+  }
+}
+
+class _Geolocation extends StatelessWidget {
+  const _Geolocation({
+    required this.latitude,
+    required this.longitude,
+    Key? key,
+  }) : super(key: key);
+
+  final double latitude;
+  final double longitude;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () => _onLocationTap(lat: latitude, lng: longitude),
+      child: Row(
+        children: const [
+          Icon(Icons.location_on),
+          SizedBox(width: 4),
+          Text('Click to see user location'),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _onLocationTap({
+    required double lat,
+    required double lng,
+  }) async {
+    final availableMaps = await MapLauncher.installedMaps;
+
+    await availableMaps.first.showMarker(
+      coords: Coords(lat, lng),
+      title: "User location",
+    );
   }
 }

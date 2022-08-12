@@ -1,13 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surf_practice_chat_flutter/features/auth/bloc/auth_bloc.dart';
-import 'package:surf_practice_chat_flutter/features/auth/models/token_dto.dart';
-import 'package:surf_practice_chat_flutter/features/auth/repository/auth_repository.dart';
-import 'package:surf_practice_chat_flutter/features/chat/repository/chat_repository.dart';
 import 'package:surf_practice_chat_flutter/features/chat/screens/chat_screen.dart';
-import 'package:surf_study_jam/surf_study_jam.dart';
 
 /// Screen for authorization process.
 ///
@@ -23,6 +17,16 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    //костыль для проверки авторизации на старте
+    context.read<AuthBloc>().add(const AuthEvent.signIn(
+          login: '',
+          password: '',
+        ));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,14 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
         ),
-        authenticated: (state) => _pushToChat(context, state.token),
+        authenticated: (state) => Navigator.push<ChatScreen>(
+          context,
+          MaterialPageRoute(
+            builder: (_) {
+              return const ChatScreen();
+            },
+          ),
+        ),
       ),
       builder: (context, state) => Scaffold(
         body: Padding(
@@ -73,10 +84,13 @@ class _AuthScreenState extends State<AuthScreen> {
                     ValueListenableBuilder<TextEditingValue>(
                   valueListenable: _passwordController,
                   builder: (context, password, _) {
+                    final bool isEnable = state.maybeMap(
+                      inProgress: (_) => false,
+                      orElse: () => true,
+                    );
+
                     return MaterialButton(
-                      onPressed: (login.text.isEmpty || password.text.isEmpty
-                          // || state.inProgress
-                          )
+                      onPressed: (login.text.isEmpty || password.text.isEmpty || !isEnable)
                           ? null
                           : () => context.read<AuthBloc>().add(AuthEvent.signIn(
                                 login: login.text,
@@ -101,29 +115,14 @@ class _AuthScreenState extends State<AuthScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 10),
-              const LinearProgressIndicator(
-                color: Colors.orange,
-                backgroundColor: Colors.transparent,
-              ),
+              // const SizedBox(height: 10),
+              // const LinearProgressIndicator(
+              //   color: Colors.orange,
+              //   backgroundColor: Colors.transparent,
+              // ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _pushToChat(BuildContext context, TokenDto token) {
-    Navigator.push<ChatScreen>(
-      context,
-      MaterialPageRoute(
-        builder: (_) {
-          return ChatScreen(
-            // chatRepository: ChatRepository(
-            //   StudyJamClient().getAuthorizedClient(token.token),
-            // ),
-          );
-        },
       ),
     );
   }

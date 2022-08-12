@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:surf_practice_chat_flutter/features/auth/exceptions/auth_exception.dart';
 import 'package:surf_practice_chat_flutter/features/auth/models/token_dto.dart';
 import 'package:surf_practice_chat_flutter/features/auth/repository/auth_repository.dart';
+import 'package:surf_practice_chat_flutter/features/auth/services/token_storage.dart';
 import 'package:surf_practice_chat_flutter/main.dart';
 
 part 'auth_bloc.freezed.dart';
@@ -45,14 +44,18 @@ class AuthState with _$AuthState {
 }
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required final IAuthRepository authRepository})
-      : _authRepository = authRepository,
+  AuthBloc({
+    required final IAuthRepository authRepository,
+    required final TokenStorage tokenStorage,
+  })  : _authRepository = authRepository,
+        _tokenStorage = tokenStorage,
         super(const AuthState.unAuthenticated()) {
     on<_SignInEvent>(_onSignIn);
     on<_SignOutEvent>(_onSignOut);
   }
 
   final IAuthRepository _authRepository;
+  final TokenStorage _tokenStorage;
 
   Future<void> _onSignIn(
     _SignInEvent event,
@@ -60,15 +63,52 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(const AuthState.inProgress());
     try {
-      final token = await _authRepository.signIn(
-        login: event.login,
-        password: event.password,
-      );
-      log(token.token);
+      final token = await _getTokenFromStorage();
       studyJamClient = studyJamClient.getAuthorizedClient(token.token);
       emit(AuthState.authenticated(token: token));
-    } on AuthException catch (e) {
-      emit(AuthState.error(message: e.message));
+    } on Object catch (_) {
+      try {
+        if(event.password.isEmpty || event.login.isEmpty) return;
+        final token = await _authRepository.signIn(
+          login: event.login,
+          password: event.password,
+        );
+        await _tokenStorage.save(token: token);
+        studyJamClient = studyJamClient.getAuthorizedClient(token.token);
+        emit(AuthState.authenticated(token: token));
+      } on AuthException catch (e) {
+        emit(AuthState.error(message: e.message));
+      }
+    }
+
+    // try {
+    //   final token = await _tokenStorage.read();
+    //   if (token != null) {
+    //     try {
+    //       studyJamClient = studyJamClient.getAuthorizedClient(token.token);
+    //       emit(AuthState.authenticated(token: token));
+    //     } catch (e) {
+    //       final token = await _authRepository.signIn(
+    //         login: event.login,
+    //         password: event.password,
+    //       );
+    //       await _tokenStorage.save(token: token);
+    //       studyJamClient = studyJamClient.getAuthorizedClient(token.token);
+    //       emit(AuthState.authenticated(token: token));
+    //     }
+    //   }
+    // } on AuthException catch (e) {
+    //   emit(AuthState.error(message: e.message));
+    // }
+  }
+
+  Future<TokenDto> _getTokenFromStorage() async {
+    try {
+      final token = await _tokenStorage.read();
+      if (token == null) throw Exception;
+      return token;
+    } on Object catch (_) {
+      rethrow;
     }
   }
 

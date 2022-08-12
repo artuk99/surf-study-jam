@@ -16,7 +16,7 @@ class TokenDto {
   static const empty = TokenDto(token: '');
 
   bool get isEmpty => this == TokenDto.empty;
-  
+
   @override
   String toString() {
     return 'TokenDto(token: $token)';
