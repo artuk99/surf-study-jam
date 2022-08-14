@@ -68,7 +68,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthState.authenticated(token: token));
     } on Object catch (_) {
       try {
-        if(event.password.isEmpty || event.login.isEmpty) return;
+        if(event.password.isEmpty || event.login.isEmpty) {
+          emit(const AuthState.unAuthenticated());
+          return;
+        }
         final token = await _authRepository.signIn(
           login: event.login,
           password: event.password,
