@@ -83,26 +83,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthState.error(message: e.message));
       }
     }
-
-    // try {
-    //   final token = await _tokenStorage.read();
-    //   if (token != null) {
-    //     try {
-    //       studyJamClient = studyJamClient.getAuthorizedClient(token.token);
-    //       emit(AuthState.authenticated(token: token));
-    //     } catch (e) {
-    //       final token = await _authRepository.signIn(
-    //         login: event.login,
-    //         password: event.password,
-    //       );
-    //       await _tokenStorage.save(token: token);
-    //       studyJamClient = studyJamClient.getAuthorizedClient(token.token);
-    //       emit(AuthState.authenticated(token: token));
-    //     }
-    //   }
-    // } on AuthException catch (e) {
-    //   emit(AuthState.error(message: e.message));
-    // }
   }
 
   Future<TokenDto> _getTokenFromStorage() async {
